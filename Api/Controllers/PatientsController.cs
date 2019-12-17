@@ -1,7 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
 using PatientDelta;
 using PatientDelta.PatientDeltaModel;
@@ -37,19 +42,11 @@ namespace Api.Controllers
         }
 
         [HttpGet]
-        public string RetrieveTransferPatients()
+        public IActionResult RetrieveTransferPatients()
         {
-            try
-            {
-                var response = _repo.RetrievePatients();
+            var content = _repo.RetrievePatients();
 
-                return JsonSerializer.Serialize(response);
-            }
-            catch (Exception e)
-            {
-                _logger.Log(LogLevel.Error, e.Message);
-                throw;
-            }
+            return new JsonResult(content);
         }
     }
 }

@@ -3,12 +3,12 @@ using Xunit;
 
 namespace PatientDeltaTests
 {
-    public class PatientDeltaRepositoryTests
+    public class DeltaOrchestratorTests
     {
         [Fact]
         public void Test1()
         {
-
+            
         }
     }
 }

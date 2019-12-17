@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MigrationsApi", "MigrationsApi\MigrationsApi.csproj", "{FE5BA854-E700-491A-B3D9-8E25D1D26F0C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api", "Api\Api.csproj", "{FE5BA854-E700-491A-B3D9-8E25D1D26F0C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PdsLookup", "MigrationsModel\PdsLookup.csproj", "{D379EFF0-44E5-405B-97C1-2208D8DF8A58}"
 EndProject

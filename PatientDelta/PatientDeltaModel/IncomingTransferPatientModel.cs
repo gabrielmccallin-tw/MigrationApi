@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MigrationsApi.PatientDelta
+﻿namespace PatientDelta.PatientDeltaModel
 {
     public class IncomingTransferPatientModel
     {

@@ -13,6 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Migrations" />
     <Folder Include="PatientDeltaModel\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MigrationsModel\PdsLookup.csproj" />
   </ItemGroup>
 </Project>

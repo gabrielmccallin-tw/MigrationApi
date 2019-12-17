@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 using PatientDelta;
 using PdsLookup;
 
-namespace MigrationsApi
+namespace Api
 {
     public class Startup
     {
@@ -27,15 +27,20 @@ namespace MigrationsApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options => options.AddPolicy("thing", b =>
+                {
+                    b.WithOrigins("https://gabrielmccallin-tw.github.io");
+                }));
+            
             //controllers
             services.AddControllers();
 
             //pds lookup
-            services.AddSingleton<IPatientRetreiver, PatientRetreiver>();
+            services.AddSingleton<IPdsRetreiver, PdsRetreiver>();
 
             //patient delta
             services.AddDbContext<PatientsContext>();
-            services.AddScoped<IPatientDeltaRepository, PatientDeltaRepository>();
+            services.AddScoped<IDeltaOrchestrator, DeltaOrchestrator>();
             services.AddSingleton<IIncomingTransferPatientMapper, IncomingTransferPatientMapper>();
 
         }
@@ -58,6 +63,8 @@ namespace MigrationsApi
             {
                 endpoints.MapControllers();
             });
+
+            app.UseCors("thing");
         }
     }
 }

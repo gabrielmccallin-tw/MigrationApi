@@ -1,6 +1,6 @@
 using System;
 
-namespace MigrationsApi
+namespace Api
 {
     public class WeatherForecast
     {

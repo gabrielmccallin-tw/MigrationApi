@@ -4,21 +4,16 @@ using System.Linq;
 
 namespace PdsLookup
 {
-    public interface IPatientRetreiver
-    {
-        PatientDetail GetPatientDetail(int nhsNumber);
-    }
-
-    public class PatientRetreiver: IPatientRetreiver
+    public class PdsRetreiver: IPdsRetreiver
     {
         private readonly List<PatientDetail> _fakePatients;
 
-        public PatientRetreiver()
+        public PdsRetreiver()
         {
             _fakePatients = MakePatients();
         }
 
-        public PatientDetail GetPatientDetail(int nhsNumber)
+        public PatientDetail Retrieve(int nhsNumber)
         {
             return _fakePatients.FirstOrDefault(p => p.NhsNumber == nhsNumber) ??
                 throw new Exception(message: "Nhs number not found");

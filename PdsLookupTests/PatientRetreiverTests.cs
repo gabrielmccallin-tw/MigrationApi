@@ -11,9 +11,9 @@ namespace PdsLookupTests
         [Fact]
         public void GetPatientDetail_WhenCalledWithValidNhsNumber_ReturnsPatient()
         {
-            var sut = new PatientRetreiver();
+            var sut = new PdsRetreiver();
 
-            var result = sut.GetPatientDetail(111111111);
+            var result = sut.Retrieve(111111111);
 
             result.Name.Should().Be("Patient One");
         }
@@ -21,9 +21,9 @@ namespace PdsLookupTests
         [Fact]
         public void GetPatientDetail_WhenPatientNotFound_Throws()
         {
-            var sut = new PatientRetreiver();
+            var sut = new PdsRetreiver();
 
-            var ex = Assert.Throws<Exception>(() => sut.GetPatientDetail(123456789));
+            var ex = Assert.Throws<Exception>(() => sut.Retrieve(123456789));
 
             ex.Message.Should().Be("Nhs number not found");
         }

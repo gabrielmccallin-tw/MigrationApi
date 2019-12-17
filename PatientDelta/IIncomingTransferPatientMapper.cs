@@ -1,4 +1,4 @@
-﻿using MigrationsApi.PatientDelta;
+﻿using PatientDelta.PatientDeltaModel;
 
 namespace PatientDelta
 {

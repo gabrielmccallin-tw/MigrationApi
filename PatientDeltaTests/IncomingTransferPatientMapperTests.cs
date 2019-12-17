@@ -1,7 +1,7 @@
 ﻿using System;
 using Xunit;
 using PatientDelta;
-using MigrationsApi.PatientDelta;
+using PatientDelta.PatientDeltaModel;
 
 namespace PatientDeltaTests
 {
@@ -22,8 +22,10 @@ namespace PatientDeltaTests
 
             var result = sut.Map(testTransfer);
 
-            result.Name.Equals("wibble");
+            result.PatientName.Equals("wibble");
             result.NhsNumber.Equals(1);
+            result.Requester.Equals("wobble");
+            result.RequestDate.Equals(DateTime.Now.Date);
         }
     }
 }

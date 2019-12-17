@@ -13,11 +13,10 @@ namespace PatientDelta.Migrations
                 {
                     NhsNumber = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(nullable: true),
-                    Practice = table.Column<string>(nullable: true),
-                    Telephone = table.Column<string>(nullable: true),
-                    Email = table.Column<string>(nullable: true),
-                    Dob = table.Column<DateTime>(nullable: false)
+                    PatientName = table.Column<string>(nullable: true),
+                    Requester = table.Column<string>(nullable: true),
+                    Status = table.Column<int>(nullable: false),
+                    RequestDate = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {

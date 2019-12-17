@@ -1,5 +1,5 @@
 ﻿using System;
-using MigrationsApi.PatientDelta;
+using PatientDelta.PatientDeltaModel;
 
 namespace PatientDelta
 {
@@ -9,7 +9,10 @@ namespace PatientDelta
         {
             return new Patient()
             {
-                Name = patient.PatientName,
+                PatientName = patient.PatientName,
+                Status = Status.Pending,
+                Requester = patient.Requester,
+                RequestDate = DateTime.Now,
                 NhsNumber = Int32.Parse(patient.NhsNumber)
             };
         }

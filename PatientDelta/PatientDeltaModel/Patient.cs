@@ -1,21 +1,27 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace PatientDelta
+namespace PatientDelta.PatientDeltaModel
 {
     public class Patient
     {
-        public string Name { get; set; }
+        public string PatientName { get; set; }
 
-        public string Practice { get; set; }
+        public string Requester { get; set; }
 
-        public string Telephone { get; set; }
+        public Status Status { get; set; }
 
-        public string Email { get; set; }
-
-        public DateTime Dob { get; set; }
+        public DateTime RequestDate { get; set; }
 
         [Key]
         public int NhsNumber { get; set; }
     }
+
+    public enum Status
+    {
+        Pending,
+        Doing,
+        Done
+    }
+
 }

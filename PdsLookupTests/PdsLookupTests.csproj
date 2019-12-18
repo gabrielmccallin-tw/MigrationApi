@@ -21,4 +21,11 @@
   <ItemGroup>
     <ProjectReference Include="..\MigrationsModel\PdsLookup.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="TestFakePatients.json" />
+    <EmbeddedResource Include="TestFakePatients.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

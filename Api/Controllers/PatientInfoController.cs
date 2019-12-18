@@ -12,18 +12,18 @@ namespace Api.Controllers
     public class PatientInfoController : ControllerBase
     {
         private readonly ILogger _logger;
-        private readonly IPdsRetreiver _pdsRetreiver;
+        private readonly IPdsRetreiver _pdsRetriever;
 
-        public PatientInfoController(ILogger<PatientInfoController> logger, IPdsRetreiver pdsRetreiver)
+        public PatientInfoController(ILogger<PatientInfoController> logger, IPdsRetreiver pdsRetriever)
         {
             _logger = logger;
-            _pdsRetreiver = pdsRetreiver;
+            _pdsRetriever = pdsRetriever;
         }
 
         [HttpGet("{id}")]
         public PatientDetail GetPatientDetail(string id)
         {
-            return _pdsRetreiver.Retrieve(Int32.Parse(id));
+            return _pdsRetriever.Retrieve(id);
         }
     }
 }

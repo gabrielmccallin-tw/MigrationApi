@@ -15,7 +15,7 @@ namespace PdsLookupTests
 
             var result = sut.Retrieve(111111111);
 
-            result.Name.Should().Be("Patient One");
+            result.PatientName.Should().Be("Patient One");
         }
 
         [Fact]

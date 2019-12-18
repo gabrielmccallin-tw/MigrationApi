@@ -9,12 +9,12 @@ namespace PatientDelta.PatientDeltaModel
 
         public string Requester { get; set; }
 
-        public Status Status { get; set; }
+        public string Status { get; set; }
 
         public DateTime RequestDate { get; set; }
 
         [Key]
-        public int NhsNumber { get; set; }
+        public string NhsNumber { get; set; }
     }
 
     public enum Status

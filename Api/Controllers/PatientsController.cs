@@ -49,5 +49,11 @@ namespace Api.Controllers
 
             return new JsonResult(content);
         }
+
+        [HttpDelete]
+        public string DeleteAll()
+        {
+            return _repo.RemovePatients();
+        }
     }
 }

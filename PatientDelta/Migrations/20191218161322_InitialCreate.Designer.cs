@@ -9,7 +9,7 @@ using PatientDelta;
 namespace PatientDelta.Migrations
 {
     [DbContext(typeof(PatientsContext))]
-    [Migration("20191217160049_InitialCreate")]
+    [Migration("20191218161322_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,9 +20,8 @@ namespace PatientDelta.Migrations
 
             modelBuilder.Entity("PatientDelta.PatientDeltaModel.Patient", b =>
                 {
-                    b.Property<int>("NhsNumber")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("NhsNumber")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PatientName")
                         .HasColumnType("TEXT");
@@ -33,8 +32,8 @@ namespace PatientDelta.Migrations
                     b.Property<string>("Requester")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Status")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("NhsNumber");
 

@@ -10,10 +10,10 @@ namespace PatientDelta
             return new Patient()
             {
                 PatientName = patient.PatientName,
-                Status = Status.Pending,
+                Status = "Pending",
                 Requester = patient.Requester,
                 RequestDate = DateTime.Now,
-                NhsNumber = Int32.Parse(patient.NhsNumber)
+                NhsNumber = patient.NhsNumber
             };
         }
     }

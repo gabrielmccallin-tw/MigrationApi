@@ -23,9 +23,10 @@ namespace PatientDeltaTests
             var result = sut.Map(testTransfer);
 
             result.PatientName.Equals("wibble");
-            result.NhsNumber.Equals(1);
+            result.NhsNumber.Equals("1");
             result.Requester.Equals("wobble");
             result.RequestDate.Equals(DateTime.Now.Date);
+            result.Status.Equals("Pending");
         }
     }
 }

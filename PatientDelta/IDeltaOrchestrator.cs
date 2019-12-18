@@ -8,5 +8,7 @@ namespace PatientDelta
         string AddPatient(IncomingTransferPatientModel patient);
 
         List<Patient> RetrievePatients();
+
+        string RemovePatients();
     }
 }

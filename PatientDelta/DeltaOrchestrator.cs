@@ -16,13 +16,16 @@ namespace PatientDelta
         {
             _context = context;
             _mapper = mapper;
-            _context.Database.Migrate();
+            _context.Database.EnsureCreated(); 
+            // change above to Migrate instead of Ensure created if you see errors
+            // related to 'Table already exists' or 'table not found'. I have no 
+            // idea why. 
         }
 
         public string AddPatient(IncomingTransferPatientModel patient)
         {
        
-            if (_context.Patients.Any(p => p.NhsNumber == Int32.Parse(patient.NhsNumber)))
+            if (_context.Patients.Any(p => p.NhsNumber == patient.NhsNumber))
             {
                 return "Patient already queued for transfer";
             }
@@ -37,6 +40,17 @@ namespace PatientDelta
         public List<Patient> RetrievePatients()
         {
             return _context.Patients.OrderBy(p => p.PatientName).ToList();
+        }
+
+        public string RemovePatients()
+        {
+            var collectionToDelete = _context.Patients;
+            _context.Patients.RemoveRange(collectionToDelete);
+            _context.SaveChanges();
+
+            return !_context.Patients.Any() ? 
+                "patients cleared" : 
+                "couldn't clear patients";
         }
     }
 }

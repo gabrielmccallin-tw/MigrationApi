@@ -18,9 +18,8 @@ namespace PatientDelta.Migrations
 
             modelBuilder.Entity("PatientDelta.PatientDeltaModel.Patient", b =>
                 {
-                    b.Property<int>("NhsNumber")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("NhsNumber")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("PatientName")
                         .HasColumnType("TEXT");
@@ -31,8 +30,8 @@ namespace PatientDelta.Migrations
                     b.Property<string>("Requester")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
+                    b.Property<string>("Status")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("NhsNumber");
 

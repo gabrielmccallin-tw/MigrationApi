@@ -27,12 +27,7 @@ namespace Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options => options.AddPolicy("corsPolicy", b =>
-                {
-                    b.WithOrigins("*")
-                        .WithHeaders("*")
-                        .WithMethods("*");
-                }));
+            services.AddCors();
             
             //controllers
             services.AddControllers();
@@ -58,6 +53,15 @@ namespace Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            
+            app.UseCors(
+                options => 
+                    options
+                        .SetIsOriginAllowed(x => _ = true)
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials()
+            );
 
             app.UseAuthorization();
 
@@ -65,8 +69,6 @@ namespace Api
             {
                 endpoints.MapControllers();
             });
-
-            app.UseCors("corsPolicy");
         }
     }
 }

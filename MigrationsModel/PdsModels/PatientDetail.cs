@@ -1,10 +1,10 @@
 ﻿using System;
 
-namespace PdsLookup
+namespace PdsLookup.PdsModels
 {
     public class PatientDetail
     {
-        public string Name { get; set; }
+        public string PatientName { get; set; }
 
         public string Practice { get; set; }
 
@@ -14,6 +14,6 @@ namespace PdsLookup
 
         public DateTime Dob { get; set; }
 
-        public int NhsNumber { get; set; }
+        public string NhsNumber { get; set; }
     }
 }

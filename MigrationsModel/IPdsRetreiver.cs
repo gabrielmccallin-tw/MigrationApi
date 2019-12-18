@@ -1,3 +1,5 @@
+using PdsLookup.PdsModels;
+
 namespace PdsLookup
 {
     public interface IPdsRetreiver

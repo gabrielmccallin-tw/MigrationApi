@@ -11,7 +11,7 @@ namespace PdsLookup
     {
         private readonly List<PatientDetail> _fakePatients;
         private readonly string _optPath;
-        private readonly string _fakePatientPath = "..//MigrationsModel//Data//FakePatients.json";
+        private readonly string _fakePatientPath = "..//PdsLookup//Data//FakePatients.json";
 
         public PdsRetreiver(string optPath = null)
         {

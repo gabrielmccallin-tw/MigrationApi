@@ -7,13 +7,13 @@ This is intended to provide a single interface for managing practice-migration r
 - To provide integrations needed to carry out these processes. eg: PDS (currently mocked), prm-deductions components etc. 
 - Orchestrate all processes
 
-# Contracts
+## Contracts
 
-# -> Pds Lookup Request
+## -> Pds Lookup Request
 
 GET /patientinfo/nhsNumber
 
-# <- Pds Lookup Response
+## <- Pds Lookup Response
 
 {
 
@@ -31,7 +31,7 @@ GET /patientinfo/nhsNumber
 
 }
 
-# ->  Queue/Add Patient Request
+## ->  Queue/Add Patient Request
 
 POST /patients
 
@@ -47,7 +47,7 @@ POST /patients
 
 }
 
-# <- Patient Queued/Added Response
+## <- Patient Queued/Added Response
 
 {
 
@@ -63,11 +63,11 @@ POST /patients
 
 }
 
-# -> Patient Queue Request
+## -> Patient Queue Request
 
 GET /patients
 
-# <- Patient Queue Response
+## <- Patient Queue Response
 
 [
 
@@ -101,19 +101,19 @@ GET /patients
 
 ]
 
-# -> Delete Patients Request
+## -> Delete Patients Request
 
 DELETE / patients
 
-# <- Delete Patients Response
+## <- Delete Patients Response
 
 "confirmation string output"
 
-# -> Transfer Patients Request
+## -> Transfer Patients Request
 
 POST /transferall
 
-# <- Transfer Patients Response
+## <- Transfer Patients Response
 
 "confirmation string output"
 

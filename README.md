@@ -9,11 +9,11 @@ This is intended to provide a single interface for managing practice-migration r
 
 Contracts
 
-->
+-> Pds Lookup Request
 
 GET /patientinfo/nhsNumber
 
-<-
+<- Pds Lookup Response
 
 {
 
@@ -31,12 +31,12 @@ GET /patientinfo/nhsNumber
 
 }
 
--> 
+->  Queue/Add Patient Request
 
 POST /patients
 
 {
-	
+
     "ods": "Practice X",
 
     "patientName": "Patient X",
@@ -47,7 +47,7 @@ POST /patients
 
 }
 
-<-
+<- Patient Queued/Added Response
 
 {
 
@@ -63,11 +63,11 @@ POST /patients
 
 }
 
-->
+-> Patient Queue Request
 
 GET /patients
 
-<-
+<- Patient Queue Response
 
 [
 
@@ -101,19 +101,19 @@ GET /patients
 
 ]
 
-->
+-> Delete Patients Request
 
 DELETE / patients
 
-<-
+<- Delete Patients Response
 
 "confirmation string output"
 
-->
+-> Transfer Patients Request
 
 POST /transferall
 
-<-
+<- Transfer Patients Response
 
 "confirmation string output"
 

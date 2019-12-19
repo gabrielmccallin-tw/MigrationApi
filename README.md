@@ -1,4 +1,4 @@
-# MigrationApi
+# prm-migration-poc
 
 The Migration Api serves as a backend service for the migrations portal.
 

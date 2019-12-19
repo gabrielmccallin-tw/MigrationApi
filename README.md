@@ -36,6 +36,7 @@ GET /patientinfo/nhsNumber
 POST /patients
 
 {
+	
     "ods": "Practice X",
 
     "patientName": "Patient X",
@@ -49,6 +50,7 @@ POST /patients
 <-
 
 {
+
     "PatientName": "Patient X",
 
     "Requester": "Mr Requestor X",

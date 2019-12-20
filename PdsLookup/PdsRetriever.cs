@@ -11,7 +11,7 @@ namespace PdsLookup
     {
         private readonly List<PatientDetail> _fakePatients;
         private readonly string _optPath;
-        private readonly string _fakePatientPath = "..//PdsLookup//Data//FakePatients.json";
+        private readonly string _fakePatientPath = "Data//FakePatients.json";
 
         public PdsRetreiver(string optPath = null)
         {
@@ -27,7 +27,6 @@ namespace PdsLookup
 
         private List<PatientDetail> MakePatients()
         {
-            
             var patients = JsonConvert.DeserializeObject<List<PatientDetail>>(File.ReadAllText(_optPath ?? _fakePatientPath));
             return patients;
         }

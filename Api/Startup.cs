@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.DotNet.PlatformAbstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,8 +18,11 @@ namespace Api
 {
     public class Startup
     {
+        private readonly string _fakePatientsPath;
+        
         public Startup(IConfiguration configuration)
         {
+            _fakePatientsPath = ApplicationEnvironment.ApplicationBasePath + "/Data/FakePatients.json";
             Configuration = configuration;
         }
 
@@ -33,7 +37,7 @@ namespace Api
             services.AddControllers();
 
             //pds lookup
-            services.AddSingleton<IPdsRetreiver, PdsRetreiver>();
+            services.AddSingleton<IPdsRetreiver>(x => new PdsRetreiver(_fakePatientsPath));
 
             //patient delta
             services.AddDbContext<PatientsContext>();

@@ -2691,7 +2691,7 @@
       "outputPath": "/Users/parthaggarwal/dev/prm-migration-poc/PdsLookup/obj/",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/Users/parthaggarwal/.config/NuGet/NuGet.Config"
+        "/Users/parthaggarwal/.nuget/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"

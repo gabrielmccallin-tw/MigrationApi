@@ -1,4 +1,4 @@
-# MigrationApi
+# prm-migration-poc
 
 The Migration Api serves as a backend service for the migrations portal.
 
@@ -7,7 +7,7 @@ This is intended to provide a single interface for managing practice-migration r
 - To provide integrations needed to carry out these processes. eg: PDS (currently mocked), prm-deductions components etc. 
 - Orchestrate all processes
 
-## Contracts
+## Contract
 
 ### -> Pds Lookup Request
 
@@ -116,7 +116,6 @@ POST /transferall
 ### <- Transfer Patients Response
 
 "confirmation string output"
-
  
 
 

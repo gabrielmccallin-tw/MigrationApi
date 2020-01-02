@@ -1,121 +1,178 @@
 # prm-migration-poc
 
-The Migration Api serves as a backend service for the migrations portal.
+This service manages a list of patients seen during a practice migration.
 
-This is intended to provide a single interface for managing practice-migration related processes. 
+Features:
+- PDS mock for getting patient information based on a NHS Number
+- view list of patients
+- add patient to the list
+- delete all patients in the list
+- transfer all patient records to new clinical system (not implemented)
 
-- To provide integrations needed to carry out these processes. eg: PDS (currently mocked), prm-deductions components etc. 
-- Orchestrate all processes
+The database is mocked within the application; restarts of the application will wipe any data stored.
 
+The application is exposed on port 80.
+
+
+---
 ## Contract
 
-### -> Pds Lookup Request
+### **patientinfo**
+Find patient in PDS and return some of their information.
 
-GET /patientinfo/nhsNumber
+- **GET `/patientinfo/{nhsNumber}`**
+    - Returns patient information from PDS (mocked)
 
-### <- Pds Lookup Response
+- **Parameters**  
+    - `nhsNumber: string`
+        - required
 
-{
+- **Success response**
+    - Code: **200**
+    - Content
+        ```
+        {
+            "patientName": "string",
+            "practice": "string",
+            "telephone": "string",
+            "email": "string",
+            "dob": "string",
+            "nhsNumber": "string"
+        }
+        ```
 
-    "patientName": "Rachel Roth",
+- **Error response**
+    - Code: **500** (patient does not exist)
+    - Code: **404** (empty nhsNumber) 
 
-    "practice": "GP Practice 2",
 
-    "telephone": "07700 900457",
+- **Example**
+    ```
+    curl --request GET \
+    --url http://localhost:5000/patientinfo/2234567890
+    ```
+---
+### **patients**
+Manage a list of patients that are pending migration.
 
-    "email": "rachel.roth@example.com",
+**POST `/patients`**
 
-    "dob": "1978-01-05T00:00:00",
+- **Description**
+    - Add patient to list
 
-    "nhsNumber": "2234567890"
-
-}
-
-### ->  Queue/Add Patient Request
-
-POST /patients
-
-{
-
-    "ods": "Practice X",
-
-    "patientName": "Patient X",
-
-    "nhsNumber": "1234567890",
-
-    "requester": "Mr Requestor X"
-
-}
-
-### <- Patient Queued/Added Response
-
-{
-
-    "PatientName": "Patient X",
-
-    "Requester": "Mr Requestor X",
-
-    "Status": "Pending",
-
-    "RequestDate": "2019-12-19T14:22:01.851427+00:00",
-
-    "NhsNumber": "1234567890"
-
-}
-
-### -> Patient Queue Request
-
-GET /patients
-
-### <- Patient Queue Response
-
-[
-
+- **Data parameters**
+    - Payload (example)
+    ```
     {
-
-        "patientName": "Patient Three",
-
-        "requester": "Mr Requestor One",
-
-        "status": "Pending",
-
-        "requestDate": "2019-12-19T14:21:45.60063",
-
-        "nhsNumber": "333333333"
-
-    },
-
-    {
-
+        "ods": "Practice X",
         "patientName": "Patient X",
-
-        "requester": "Mr Requestor X",
-
-        "status": "Pending",
-
-        "requestDate": "2019-12-19T14:22:01.851427",
-
-        "nhsNumber": "1234567890"
-
+        "nhsNumber": "1234567890",
+        "requester": "Mr Requestor X"
     }
+    ```
 
-]
+- **Success response**
+    - Code: **200**  
+    Content:
+    ```
+    {
+        "PatientName": "Patient X",
+        "Requester": "Mr Requestor X",
+        "Status": "Pending",
+        "RequestDate": "2019-12-19T14:22:01.851427+00:00",
+        "NhsNumber": "1234567890"
+    }
+    ```
+    - Code: **200**  
+    Content:
+    ```
+    Patient already queued for transfer
+    ```
 
-### -> Delete Patients Request
 
-DELETE / patients
+- **Error response**
+    - Code: **500** (no nhsNumber field)
 
-### <- Delete Patients Response
+- **Example**
+    ```
+    curl --request POST \
+    --url http://localhost:5000/patients \
+    --header 'content-type: application/json' \
+    --data '{
+            "ods": "Practice X",
+            "patientName": "Patient X",
+            "nhsNumber": "2234567890",
+            "requester": "Mr Requestor X"
+        }
+    '
+    ```
 
-"confirmation string output"
+---
+**GET `/patients`**
 
-### -> Transfer Patients Request
+- **Description**
+    - Get list of patients
 
-POST /transferall
+- **Success response**
+    - Code: **200**  
+    Content
+    ```
+    [{
+        "patientName": "Patient Three",
+        "requester": "Mr Requestor One",
+        "status": "Pending",
+        "requestDate": "2019-12-19T14:21:45.60063",
+        "nhsNumber": "333333333"
+    }, {
+        "patientName": "Patient X",
+        "requester": "Mr Requestor X",
+        "status": "Pending",
+        "requestDate": "2019-12-19T14:22:01.851427",
+        "nhsNumber": "1234567890"
+    }]
+    ```
+- **Example**
+    ```
+    curl --request GET \
+    --url http://localhost:5000/patients
+    ```
 
-### <- Transfer Patients Response
+---
+**DELETE `/patients`**
 
-"confirmation string output"
+- **Description**
+    - Delete all patients from the list
+
+- **Success response**
+    - Code: **200**  
+    Content
+    ```
+    patients cleared
+    ```
+    
+- **Example**
+    ```
+    curl --request DELETE \
+    --url http://localhost:5000/patients
+    ```
+---
+
+**POST `/transferall`**
+
+- **Description**
+    - Migrate all patients to target clinical system
+
+- **Success response**
+    - Code: **200**  
+    Content
+    ```
+    ```
+    
+- **Example**
+    ```
+    curl --request POST \
+    --url http://localhost:5000/transferall
+    ```
  
 
 

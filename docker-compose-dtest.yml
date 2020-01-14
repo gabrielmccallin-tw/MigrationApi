@@ -1,0 +1,7 @@
+version: '2'
+services:
+  default:
+    links:
+      - prm:prm
+  prm:
+    image: ${PRM_DOCKER_IMAGE}

@@ -6,6 +6,8 @@ pipelines:
     materials:
       git:
         type: configrepo
+    secure_variables:
+      DOCKERHUB_PASSWORD: "AES:l4TzO03XGM1O6tbRiKzxOA==:2xZ/bnmj+KFy4VUQbmwJgD/6/VxTpnXv6Q9s1Sgu6UmzAPToxJsgqdPIdYOt1P1r"
     stages:
       - build:
           clean_workspace: true
@@ -13,6 +15,9 @@ pipelines:
             build:
               resources:
                 - docker
+              artifacts:
+                - build:
+                    source: out
               tasks:
                 - exec:
                     command: /bin/bash
@@ -28,3 +33,35 @@ pipelines:
                     arguments:
                       - -c
                       - ./tasks test
+      - docker:
+          clean_workspace: true
+          jobs:
+            build:
+              resources:
+                - docker
+              tasks:
+                - fetch:
+                    stage: build
+                    job: build
+                    source: out
+                - exec:
+                    command: /bin/bash
+                    arguments:
+                      - -c
+                      - ./tasks build_docker
+      - test_docker:
+          clean_workspace: true
+          jobs:
+            test:
+              resources:
+                - docker
+              tasks:
+                - fetch:
+                    stage: build
+                    job: build
+                    source: out
+                - exec:
+                    command: /bin/bash
+                    arguments:
+                      - -c
+                      - ./tasks test_docker

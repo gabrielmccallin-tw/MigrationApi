@@ -5,6 +5,15 @@ set -Eeo pipefail
 AWS_REGION=eu-west-2
 NHS_SERVICE=prm-migration-poc
 NHS_ENVIRONMENT=dev
+IMAGE_REPO_NAME=nhsdev/prm-migration-poc
+
+function docker_login {
+  if [ -z "$DOCKERHUB_PASSWORD" ]; then
+    echo "DOCKERHUB_PASSWORD must be your dockerhub password or an API token"
+    exit 5;
+  fi
+  echo "$DOCKERHUB_PASSWORD" | docker login --username nhstomzo --password-stdin
+}
 
 command="$1"
 case "${command}" in
@@ -19,6 +28,41 @@ case "${command}" in
       ;;
   test)
       dojo "./tasks _test"
+      ;;
+  build_docker)
+      REPOSITORY_URI=$IMAGE_REPO_NAME
+      COMMIT_HASH=$(git rev-parse HEAD | cut -c 1-7)
+      IMAGE_TAG=${COMMIT_HASH}
+      echo Building the Docker image...
+      docker build -t $REPOSITORY_URI:latest .
+      docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+      docker_login
+      docker push $REPOSITORY_URI:latest
+      docker push $REPOSITORY_URI:$IMAGE_TAG
+      ;;
+  _test_docker)
+      while ! curl -i ${PRM_API_URL} | grep Kestrel; do
+        echo "Waiting for api server endpoint at ${PRM_API_URL}"
+        sleep 1
+        ((count++))
+        if [ 30 -le $count ]; then
+          echo "Timed-out waiting for api server at ${PRM_API_URL}"
+          exit 5
+        fi
+      done
+      ;;
+  test_docker)
+      export PRM_API_URL="http://prm:5000"
+      COMMIT_HASH=$(git rev-parse HEAD | cut -c 1-7)
+      IMAGE_TAG=${COMMIT_HASH}
+      export PRM_DOCKER_IMAGE="$IMAGE_REPO_NAME:$IMAGE_TAG"
+      dojo -c Dojofile-dtest "./tasks _test_docker"
+      ;;
+  tf)
+      dojo "bash"
+      ;;
+  _tf_plan)
+      tf_plan "$2"
       ;;
   *)
       echo "Invalid command: '${command}'"

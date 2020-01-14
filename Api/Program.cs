@@ -21,7 +21,12 @@ namespace Api
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    var port = Environment.GetEnvironmentVariable("PRM_LISTEN_PORT");
+                    if (string.IsNullOrEmpty(port))
+                        port = "5000";
+                    webBuilder
+                      .UseStartup<Startup>()
+                      .UseUrls($"http://0.0.0.0:{port}");
                 });
     }
 }

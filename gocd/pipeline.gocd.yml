@@ -65,3 +65,25 @@ pipelines:
                     arguments:
                       - -c
                       - ./tasks test_docker
+      - deploy:
+          clean_workspace: true
+          jobs:
+            deploy:
+              resources:
+                - docker
+              tasks:
+                - exec:
+                    command: /bin/bash
+                    arguments:
+                      - -c
+                      - ./tasks tf_plan create
+                - exec:
+                    command: /bin/bash
+                    arguments:
+                      - -c
+                      - ./tasks tf_apply
+                - exec:
+                    command: /bin/bash
+                    arguments:
+                      - -c
+                      - ./tasks wait_ecs

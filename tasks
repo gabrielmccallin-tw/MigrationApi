@@ -3,16 +3,41 @@
 set -Eeo pipefail
 
 AWS_REGION=eu-west-2
+AWS_DEFAULT_REGION=$AWS_REGION
 NHS_SERVICE=prm-migration-poc
 NHS_ENVIRONMENT=dev
-IMAGE_REPO_NAME=nhsdev/prm-migration-poc
+IMAGE_REPO_NAME=prm/prm-migration-poc
 
 function docker_login {
-  if [ -z "$DOCKERHUB_PASSWORD" ]; then
-    echo "DOCKERHUB_PASSWORD must be your dockerhub password or an API token"
-    exit 5;
+  echo Logging in to Amazon ECR...
+  eval $(dojo -c Dojofile-infra "aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION")
+}
+
+function tf_plan {
+  operation=$1
+  cd terraform
+
+  COMMIT_HASH=$(git rev-parse HEAD | cut -c 1-7)
+  IMAGE_TAG=${IMAGE_TAG:-$COMMIT_HASH}
+
+  terraform init -backend-config key=${NHS_SERVICE}-${NHS_ENVIRONMENT}/terraform.tfstate
+  terraform get # modules
+  if [[ "${operation}" == "create" ]]; then
+    terraform plan -var task_image_tag=$IMAGE_TAG -var-file=$NHS_ENVIRONMENT.tfvars -out="nhs_deployment.tfplan"
+  elif [[ "${operation}" == "destroy" ]]; then
+    terraform plan -var task_image_tag=$IMAGE_TAG -var-file=$NHS_ENVIRONMENT.tfvars -out="nhs_deployment.tfplan" -destroy
+  else
+    echo "Unknown operation (should be create or destroy), got: ${operation}"
+    exit 1
   fi
-  echo "$DOCKERHUB_PASSWORD" | docker login --username nhstomzo --password-stdin
+}
+
+function tf_apply {
+  cd terraform
+  terraform init -backend-config key=${NHS_SERVICE}-${NHS_ENVIRONMENT}/terraform.tfstate
+  terraform get # modules
+  terraform apply nhs_deployment.tfplan
+  terraform output -json > tf-out.json
 }
 
 command="$1"
@@ -29,14 +54,28 @@ case "${command}" in
   test)
       dojo "./tasks _test"
       ;;
-  build_docker)
+  build_docker_local)
       REPOSITORY_URI=$IMAGE_REPO_NAME
       COMMIT_HASH=$(git rev-parse HEAD | cut -c 1-7)
       IMAGE_TAG=${COMMIT_HASH}
+      echo Build started on `date`
       echo Building the Docker image...
       docker build -t $REPOSITORY_URI:latest .
       docker tag $REPOSITORY_URI:latest $REPOSITORY_URI:$IMAGE_TAG
+      echo Build completed on `date`
+      ;;
+  build_docker)
       docker_login
+      AWS_ACCOUNT_ID=$(dojo -c Dojofile-infra "aws sts get-caller-identity | jq -r .Account")
+      REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/$IMAGE_REPO_NAME
+      ./tasks build_docker_local
+      COMMIT_HASH=$(git rev-parse HEAD | cut -c 1-7)
+      IMAGE_TAG=${COMMIT_HASH}
+      docker tag $IMAGE_REPO_NAME $REPOSITORY_URI:$IMAGE_TAG
+      docker tag $IMAGE_REPO_NAME $REPOSITORY_URI:latest
+      echo "Pushing the Docker image...
+      $REPOSITORY_URI:latest
+      $REPOSITORY_URI:$IMAGE_TAG"
       docker push $REPOSITORY_URI:latest
       docker push $REPOSITORY_URI:$IMAGE_TAG
       ;;
@@ -51,18 +90,45 @@ case "${command}" in
         fi
       done
       ;;
-  test_docker)
+  test_docker_local)
       export PRM_API_URL="http://prm:5000"
-      COMMIT_HASH=$(git rev-parse HEAD | cut -c 1-7)
-      IMAGE_TAG=${COMMIT_HASH}
-      export PRM_DOCKER_IMAGE="$IMAGE_REPO_NAME:$IMAGE_TAG"
+      export PRM_DOCKER_IMAGE="${PRM_DOCKER_IMAGE:-$IMAGE_REPO_NAME}"
       dojo -c Dojofile-dtest "./tasks _test_docker"
       ;;
+  test_docker)
+      # Tests that image uses variables for config and runs migration on start
+      docker_login
+      COMMIT_HASH=$(git rev-parse HEAD | cut -c 1-7)
+      IMAGE_TAG=${COMMIT_HASH}
+      AWS_ACCOUNT_ID=$(dojo -c Dojofile-infra "aws sts get-caller-identity | jq -r .Account")
+      REPOSITORY_URI=$AWS_ACCOUNT_ID.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com
+      export PORTAL_DOCKER_IMAGE="${REPOSITORY_URI}/$IMAGE_REPO_NAME:${IMAGE_TAG}"
+      ./tasks test_docker_local
+      ;;
   tf)
-      dojo "bash"
+      dojo dojo -c Dojofile-infra "bash"
       ;;
   _tf_plan)
       tf_plan "$2"
+      ;;
+  tf_plan)
+      dojo -c Dojofile-infra "./tasks _tf_plan $2"
+      ;;
+  _tf_apply)
+      tf_apply
+      ;;
+  tf_apply)
+      dojo -c Dojofile-infra "./tasks _tf_apply"
+      ;;
+  _wait_ecs)
+      aws ecs wait services-stable \
+        --region $AWS_DEFAULT_REGION \
+        --cluster $NHS_ENVIRONMENT-prm-migration-poc-ecs-cluster \
+        --services $NHS_ENVIRONMENT-gp-practice-portal-service
+      ;;
+  wait_ecs)
+      check_env
+      dojo -c Dojofile-infra "./tasks _wait_ecs"
       ;;
   *)
       echo "Invalid command: '${command}'"

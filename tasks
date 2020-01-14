@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -Eeo pipefail
+
+AWS_REGION=eu-west-2
+NHS_SERVICE=prm-migration-poc
+NHS_ENVIRONMENT=dev
+
+command="$1"
+case "${command}" in
+  _build)
+      dotnet publish -c Release -o out
+      ;;
+  build)
+      dojo "./tasks _build"
+      ;;
+  _test)
+      dotnet test
+      ;;
+  test)
+      dojo "./tasks _test"
+      ;;
+  *)
+      echo "Invalid command: '${command}'"
+      exit 1
+      ;;
+esac
+set +e

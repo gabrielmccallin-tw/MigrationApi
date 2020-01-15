@@ -43,7 +43,7 @@ Find patient in PDS and return some of their information.
 
 - **Error response**
     - Code: **500** (patient does not exist)
-    - Code: **404** (empty nhsNumber) 
+    - Code: **404** (empty nhsNumber)
 
 
 - **Example**
@@ -149,7 +149,7 @@ Manage a list of patients that are pending migration.
     ```
     patients cleared
     ```
-    
+
 - **Example**
     ```
     curl --request DELETE \
@@ -167,14 +167,64 @@ Manage a list of patients that are pending migration.
     Content
     ```
     ```
-    
+
 - **Example**
     ```
     curl --request POST \
     --url http://localhost:5000/transferall
     ```
- 
 
+# Lifecyle and deployment
 
+GoCD executes a [pipeline](https://prod.gocd.patient-deductions.nhs.uk/go/tab/pipeline/history/prm-migration-poc) which builds, tests and deploys the application to ECS.
 
+Definition of the pipeline is in `gocd/pipeline.yaml`.
 
+It is possible to reproduce all steps that execute on the CI agents using docker and [Dojo](https://github.com/kudulab/dojo).
+
+To install Dojo on Mac:
+```
+brew install kudulab/homebrew-dojo-osx/dojo
+```
+
+## Tasks
+
+To build the project and create artifacts in `out` directory:
+```
+./tasks build
+```
+
+To run the unit tests:
+```
+./tasks test
+```
+
+To build the docker image locally:
+```
+./tasks build_docker_local
+```
+
+To test the docker image locally:
+```
+./tasks test_docker_local
+```
+
+## Deployment tasks
+
+You need to authenticate with AWS and export your credentials on the terminal. You can do so with:
+```
+dojo -c Dojofile-infra
+# Then type-in your details:
+aws-cli-assumerole -rmfa <role-arn> <your-username> <mfa-otp-code>
+```
+The output with AWS credentials will follow. Type `exit` and copy paste the export commands on the terminal.
+
+To run terraform plan:
+```
+./tasks tf_plan create
+```
+
+Then review the plan and apply:
+```
+./tasks tf_apply
+```

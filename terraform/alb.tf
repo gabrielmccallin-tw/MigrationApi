@@ -13,6 +13,15 @@ resource "aws_alb_target_group" "alb-tg" {
   vpc_id                = aws_vpc.main-vpc.id
   target_type           = "ip"
   deregistration_delay  = 20
+
+  health_check {
+    healthy_threshold   = 3
+    unhealthy_threshold = 5
+    timeout             = 5
+    interval            = 10
+    path                = "/patients"
+    port                = 3000
+  }
 }
 
 resource "aws_alb_listener" "alb-listener-http" {

@@ -20,7 +20,7 @@ resource "aws_alb_target_group" "alb-tg" {
     timeout             = 5
     interval            = 10
     path                = "/patients"
-    port                = 3000
+    port                = 5000
   }
 }
 

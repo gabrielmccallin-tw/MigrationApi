@@ -124,10 +124,9 @@ case "${command}" in
       aws ecs wait services-stable \
         --region $AWS_DEFAULT_REGION \
         --cluster $NHS_ENVIRONMENT-prm-migration-poc-ecs-cluster \
-        --services $NHS_ENVIRONMENT-gp-practice-portal-service
+        --services $NHS_ENVIRONMENT-prm-migration-poc-service
       ;;
   wait_ecs)
-      check_env
       dojo -c Dojofile-infra "./tasks _wait_ecs"
       ;;
   *)

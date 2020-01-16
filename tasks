@@ -129,6 +129,9 @@ case "${command}" in
   wait_ecs)
       dojo -c Dojofile-infra "./tasks _wait_ecs"
       ;;
+  smoke_test)
+      curl --fail -i http://dev.prm.patient-deductions.nhs.uk/patients
+      ;;
   *)
       echo "Invalid command: '${command}'"
       exit 1

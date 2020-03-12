@@ -94,8 +94,7 @@ pipelines:
                       - ./tasks smoke_test
       - tear_down:
         clean_workspace: true
-        approval:
-          type: manual
+        approval: manual
         jobs:
           tear_down:
             resources:
@@ -105,4 +104,4 @@ pipelines:
                   command: /bin/bash
                   arguments:
                     - -c
-                    - ./tasks tf_destroy                      
+                    - ./tasks tf_destroy

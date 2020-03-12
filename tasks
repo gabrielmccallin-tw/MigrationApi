@@ -44,7 +44,7 @@ function tf_destroy {
   cd terraform
   terraform init -backend-config key=${NHS_SERVICE}-${NHS_ENVIRONMENT}/terraform.tfstate
   terraform get # modules
-  terraform destroy -auto-approve
+  terraform destroy -auto-approve -var-file=$NHS_ENVIRONMENT.tfvars
   terraform output -json > tf-out.json
 }
 

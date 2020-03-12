@@ -129,6 +129,12 @@ case "${command}" in
   tf_apply)
       dojo -c Dojofile-infra "./tasks _tf_apply"
       ;;
+  _tf_destroy)
+      tf_destroy
+      ;;
+  tf_destroy)
+      dojo -c Dojofile-infra "./tasks _tf_destroy"
+      ;;      
   _wait_ecs)
       aws ecs wait services-stable \
         --region $AWS_DEFAULT_REGION \

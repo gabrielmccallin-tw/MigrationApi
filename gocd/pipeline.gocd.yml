@@ -65,8 +65,10 @@ pipelines:
                     arguments:
                       - -c
                       - ./tasks test_docker
-      - deploy:
+      - tear_down:
           clean_workspace: true
+          approval:
+            type: manual
           jobs:
             deploy:
               resources:
@@ -76,19 +78,4 @@ pipelines:
                     command: /bin/bash
                     arguments:
                       - -c
-                      - ./tasks tf_plan create
-                - exec:
-                    command: /bin/bash
-                    arguments:
-                      - -c
-                      - ./tasks tf_apply
-                - exec:
-                    command: /bin/bash
-                    arguments:
-                      - -c
-                      - ./tasks wait_ecs
-                - exec:
-                    command: /bin/bash
-                    arguments:
-                      - -c
-                      - ./tasks smoke_test
+                      - ./tasks tf_destroy

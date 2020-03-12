@@ -92,3 +92,16 @@ pipelines:
                     arguments:
                       - -c
                       - ./tasks smoke_test
+      - destroy:
+          clean_workspace: true
+          approval: manual
+          jobs:
+            destroy:
+              resources:
+                - docker
+              tasks:
+                - exec:
+                    command: /bin/bash
+                    arguments:
+                      - -c
+                      - ./tasks tf_destroy
